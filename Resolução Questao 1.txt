@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "FreeRTOS.h"
+#include "task.h"
+
+float temperatura = 25.0; // temperatura inicial
+TaskHandle_t xTask1Handle, xTask2Handle;
+
+void tarefa1(void *pvParameters) {
+    while(1) {
+        temperatura += 1.5; // adiciona 1.5°C
+        printf("Temperatura em Celsius: %.2f\n", temperatura);
+        vTaskDelay(pdMS_TO_TICKS(1000)); // 1 Hz (1 segundo)
+    }
+}
+
+void tarefa2(void *pvParameters) {
+    while(1) {
+        float temperatura_fahrenheit = (temperatura * 9/5) + 32; // converte para Fahrenheit
+        printf("Temperatura em Fahrenheit: %.2f\n", temperatura_fahrenheit);
+        vTaskDelay(pdMS_TO_TICKS(500)); // 2 Hz (0.5 segundo)
+    }
+}
+
+int main() {
+    xTaskCreate(tarefa1, "Tarefa 1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, &xTask1Handle);
+    xTaskCreate(tarefa2, "Tarefa 2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, &xTask2Handle);
+    
+    vTaskStartScheduler();
+
+    return 0;
+}
