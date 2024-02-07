@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "decoder.h"
+
+#define MAX_SIZE 1000 // Tamanho máximo da mensagem
+
+int main() {
+    FILE *file = fopen("message.txt", "r");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return 1;
+    }
+
+    // Lê o conteúdo do arquivo para uma string
+    char message[MAX_SIZE];
+    fgets(message, MAX_SIZE, file);
+
+    // Fecha o arquivo
+    fclose(file);
+
+    // Remove a quebra de linha do final da mensagem, se houver
+    if (message[strlen(message) - 1] == '\n')
+        message[strlen(message) - 1] = '\0';
+
+    // Chama a função para decodificar a mensagem
+    char decoded_message[MAX_SIZE];
+    decode_message(message, decoded_message);
+
+    // Imprime a mensagem decodificada na tela
+    printf("Mensagem decodificada: %s\n", decoded_message);
+
+    return 0;
+}
